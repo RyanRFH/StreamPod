@@ -227,7 +227,7 @@ const Home = () => {
             </div>
 
             :
-            <a href={`https://id.twitch.tv/oauth2/authorize?client_id=${process.env.REACT_APP_TWITCH_CLIENT_ID}&redirect_uri=http://localhost:3000/&response_type=token&scope=user%3Aread%3Afollows&state=${userTwitchStateString}`}>
+            <a href={`https://id.twitch.tv/oauth2/authorize?client_id=${process.env.REACT_APP_TWITCH_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URL}&response_type=token&scope=user%3Aread%3Afollows&state=${userTwitchStateString}`}>
               <div className="flex items-center flex-col">
                 <img src="Twitch_logo.svg" alt="twitchlogo" className="w-[100px]" />
                 <div className="bg-[#9146ff] p-[10px] rounded-xl mt-[10px] flex hover:bg-purple-500">
