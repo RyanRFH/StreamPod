@@ -18,9 +18,9 @@ const Home = () => {
   console.log(allLiveStreamsList);
 
   useEffect(() => {
+    twitchGetAppAccessToken();
     twitchGetFollowedChannels();
     twitchGetAllStreams();
-    twitchGetAppAccessToken();
   }, []);
 
 
@@ -76,6 +76,7 @@ const Home = () => {
 
       const data = await res.json();
       document.cookie = writeCookie("TwitchAppAccessToken", data.access_token, 30);
+      return data.access_token;
     } catch (error) {
       console.log(error)
     }
@@ -86,7 +87,7 @@ const Home = () => {
       let twitchAppAccessToken = jsCookie.get('TwitchAppAccessToken');
 
       if (!twitchAppAccessToken) {
-        return;
+        twitchAppAccessToken = await twitchGetAppAccessToken();
       }
 
       const res = await fetch(`https://api.twitch.tv/helix/streams`, {
@@ -99,6 +100,12 @@ const Home = () => {
       });
 
       const data = await res.json();
+
+      if (data.error) {
+        console.log("Error in twitchGetAllStreams:", data);
+        return;
+      }
+
       setAllLiveStreamsList(data);
     } catch (error) {
       console.log(error)
@@ -142,7 +149,15 @@ const Home = () => {
           "Client-Id": `${process.env.REACT_APP_TWITCH_CLIENT_ID}`
         },
       });
+
+
       const data = await res.json();
+
+      if (data.error) {
+        console.log("Error in twitchGetFollowedChannels:", data);
+        return;
+      }
+
       setLiveStreamsList(data);
     } catch (error) {
       console.log(error)
@@ -256,7 +271,7 @@ const Home = () => {
                 )
               })
               :
-              <p>Connect to see your followed streams</p>}
+              <p>Loading Streams...</p>}
           </div>
           :
           <div className="flex flex-wrap">
